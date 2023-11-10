@@ -25,5 +25,12 @@ class CalculateView(TemplateView):
         elif op == 'exp':
             result = val1**val2
 
-        print(f'{val1} {op} {val2} = {result}')
+        obj = Calculadora(
+            num1 = val1,
+            num2 = val2,
+            op = op,
+        )
+        obj.save()
+
+        print(f'\033[91m{val1} {op} {val2} = {result}\033[0m')
         return JsonResponse({"resultado":result})
