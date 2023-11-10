@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcularo App</title>
+
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <h2 class="text-center mb-4">Calculadora</h2>
+        <form id="calculatorForm">
+          <div class="form-group">
+            <label for="val1">Valor 1:</label>
+            <input type="number" class="form-control" id="val1" required>
+          </div>
+          <div class="form-group">
+            <label for="val2">Valor 2:</label>
+            <input type="number" class="form-control" id="val2" required>
+          </div>
+          <div class="form-group">
+            <label for="operation">Operação:</label>
+            <select class="form-control" id="operation" required>
+              <option value="ad">Adição</option>
+              <option value="sub">Subtração</option>
+              <option value="mult">Multiplicação</option>
+              <option value="div">Divisão</option>
+              <option value="exp">Exponenciação</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="calculate()">Calcular</button>
+        </form>
+        <div id="result" class="mt-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      var val1 = $('#val1').val();
+      var val2 = $('#val2').val();
+      var op = $('#operation').val();
+
+      $.ajax({
+        url: `/calcularo/${val1}/${val2}/${op}`,
+        type: 'GET',
+        success: function (data) {
+          $('#result').html(`<p>Resultado: ${data.resultado}</p>`);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

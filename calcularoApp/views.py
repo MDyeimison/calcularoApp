@@ -7,6 +7,7 @@ from calcularoApp.models import Calculadora
 # Create your views here.
 class CalculateView(TemplateView):
     model = Calculadora
+    
 
     def get(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,12 +26,9 @@ class CalculateView(TemplateView):
         elif op == 'exp':
             result = val1**val2
 
-        obj = Calculadora(
-            num1 = val1,
-            num2 = val2,
-            op = op,
-        )
-        obj.save()
-
-        print(f'\033[91m{val1} {op} {val2} = {result}\033[0m')
+        print(f'{val1} {op} {val2} = {result}')
         return JsonResponse({"resultado":result})
+    
+    
+class testeView(TemplateView):
+    template_name = "calcularoApp/index.html"
