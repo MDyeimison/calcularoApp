@@ -14,6 +14,7 @@ class CalculateView(TemplateView):
         val1 = float(kwargs['val1'])
         val2 = float(kwargs['val2'])
         op = kwargs['op']
+        result = 0
 
         if op == 'ad':
             result = val1+val2
@@ -22,7 +23,8 @@ class CalculateView(TemplateView):
         elif op == 'mult':
             result = val1*val2
         elif op == 'div':
-            result = float(val1/val2)
+            if val2 != 0:
+                result = float(val1/val2)
         elif op == 'exp':
             result = val1**val2
             
@@ -38,5 +40,8 @@ class CalculateView(TemplateView):
         return JsonResponse({"resultado":result})
     
     
-class testeView(TemplateView):
+class DigitalView(TemplateView):
     template_name = "calcularoApp/index.html"
+    
+class AnalogicaView(TemplateView):
+    template_name = "calcularoApp/analogica.html"

@@ -1,130 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculadora Analógica</title>
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f0f0f0;
-      }
 
-      .calculator {
-        background-color: #fff;
-        border: 2px solid #ccc;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcularo App</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-      .display {
-        font-size: 24px;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
 
-      .buttons {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-      }
-
-      button {
-        font-size: 18px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #eee;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      button:hover {
-        background-color: #ddd;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="calculator">
-      <div class="display" id="result">0</div>
-      <div class="buttons">
-        <button onclick="appendToDisplay('1')">1</button>
-        <button onclick="appendToDisplay('2')">2</button>
-        <button onclick="appendToDisplay('3')">3</button>
-        <button onclick="appendToDisplay('+')">+</button>
-        <button onclick="appendToDisplay('4')">4</button>
-        <button onclick="appendToDisplay('5')">5</button>
-        <button onclick="appendToDisplay('6')">6</button>
-        <button onclick="appendToDisplay('-')">-</button>
-        <button onclick="appendToDisplay('7')">7</button>
-        <button onclick="appendToDisplay('8')">8</button>
-        <button onclick="appendToDisplay('9')">9</button>
-        <button onclick="appendToDisplay('*')">*</button>
-        <button onclick="appendToDisplay('0')">0</button>
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="appendToDisplay('/')">/</button>
-      </div>
+<body class="container  mx-auto h-screen">
+  <div class="card mt-10 flex justify-center items-center">
+    <div class="card-body bg-white p-8 card">
+      <form id="calculatorForm">
+        <div class="form-control">
+          <label for="val1">Valor 1:</label>
+          <input type="number" class="input bg-gray-200/80 " id="val1" required>
+        </div>
+        <div class="form-control">
+          <label for="val2">Valor 2:</label>
+          <input type="number" class="input bg-gray-200/80" id="val2" required>
+        </div>
+        <div class="form-control mb-5">
+          <label for="operation">Operação:</label>
+          <select class="select select-bordered w-full max-w-xs bg-gray-200/80" id="operation" required>
+            <option value="ad">Adição</option>
+            <option value="sub">Subtração</option>
+            <option value="mult">Multiplicação</option>
+            <option value="div">Divisão</option>
+            <option value="exp">Exponenciação</option>
+          </select>
+        </div>
+        <div class="flex mt-3 justify-center">
+          <button type="button" class=" btn btn-active btn-accent" onclick="calculate()">Calcular</button>
+        </div>
+      </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <div id="result" class="p-4 mt-2"></div>
+  </div>
+  </div>
+</body>
 
-    <script>
-      function appendToDisplay(value) {
-        var display = document.getElementById('result');
-        display.textContent += value;
+
+
+<script>
+  function calculate() {
+    var val1 = $('#val1').val();
+    var val2 = $('#val2').val();
+    var op = $('#operation').val();
+
+    $.ajax({
+      url: `/calcularo/${val1}/${val2}/${op}`,
+      type: 'GET',
+      success: function (data) {
+        $('#result').html(`<p>Resultado: ${data.resultado}</p>`);
+      },
+      error: function (error) {
+        console.log(error);
       }
+    });
+  }
+</script>
+</body>
 
-      function clearDisplay() {
-        var display = document.getElementById('result');
-        display.textContent = '0';
-      }
-
-      function calculate() {
-        var display = document.getElementById('result');
-        console.log(display.textContent);
-        inputString = display.textContent;
-        let sections = inputString.split(/([+\-*/])/);
-
-        // Filter out empty strings from the result
-        sections = sections.filter((section) => section !== '');
-        var op = '';
-        if (sections[1] === '+') {
-          op = 'ad';
-        } else if (sections[1] === '-') {
-          op = 'sub';
-        } else if (sections[1] === '*') {
-          op = 'mult';
-        } else if (sections[1] === '/') {
-          op = 'div';
-        }
-
-        var val1 = sections[0];
-        var val2 = sections[2];
-
-        console.log(val1);
-        console.log(val2);
-        console.log(op);
-
-        $.ajax({
-          url: `/calcularo/${val1}/${val2}/${op}`,
-          type: 'GET',
-          success: function (data) {
-            $('#result').html(`<div> ${data.resultado}</div>`);
-          },
-          error: function (error) {
-            console.log(error);
-          },
-        });
-      }
-    </script>
-  </body>
 </html>
